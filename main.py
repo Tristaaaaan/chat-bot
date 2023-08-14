@@ -7,15 +7,16 @@ from kivymd.app import MDApp
 from kivymd.uix.card import MDCard
 from kivymd.uix.label import MDLabel
 from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.button import MDFlatButton
+from kivymd.uix.dialog import MDDialog
 
 import time
 import openai
+import threading
 
 from database import Database
 
 db = Database()
-
-openai.api_key = '<API_KEY>'
 
 
 class SendMessage(MDBoxLayout):
@@ -40,6 +41,33 @@ class SendMessage(MDBoxLayout):
         self.ids.user_message.text = ''
         # Delay execution by 0.1 seconds
         Clock.schedule_once(lambda dt: self.bot_responsee(), 2)
+
+    def validate_api(self):
+        if not MDApp.get_running_app().root.first.ids.api_key_ai.text:
+            self.error_dialog(
+                message="Sorry, the application failed to establish a connection. Please try again.")
+        else:
+            openai.api_key = MDApp.get_running_app().root.first.ids.api_key_ai.text
+            threading.Thread(target=self.response()).start()
+
+    def error_dialog(self, message):
+
+        close_button = MDFlatButton(
+            text='CLOSE',
+            text_color=[0, 0, 0, 1],
+            on_release=self.close_dialog,
+        )
+        self.dialog = MDDialog(
+            title='[color=#FF0000]Ooops![/color]',
+            text=message,
+            buttons=[close_button],
+            auto_dismiss=False
+        )
+        self.dialog.open()
+
+    # Close Dialog
+    def close_dialog(self, obj):
+        self.dialog.dismiss()
 
     def bot_responsee(self):
 

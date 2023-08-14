@@ -3,11 +3,23 @@
     name: "first"
     listexpenses: listexpenses
     user_message_access: user_message_access
+    api_key_ai: api_key_ai
     MDBoxLayout:
-        size_hint: 1, 1
+        size_hint: 1, .95
         orientation: 'vertical'
         pos_hint: {'center_x': .5, 'center_y': .5}
         padding: [0, 0, 0, 10]
+        MDBoxLayout:
+            size_hint: .9, .1
+            pos_hint: {'center_x': .5}
+            MDTextField:
+                id: api_key_ai
+                mode: "rectangle"
+                font_style: 'Caption'
+                hint_text: "    API Key    "
+                color_mode: 'custom'
+                line_color_focus: 0, 0, 0, 1
+                line_color_normal: 0, 0, 0, 1    
         MDBoxLayout:
             size_hint_y: .1
             MDLabel:
@@ -15,7 +27,7 @@
                 font_name: 'Poppins/Poppins-Medium'
                 halign: 'center'
         MDBoxLayout:
-            size_hint_y: .8
+            size_hint_y: .7
             ScrollView:
                 scroll_y: 0
 
@@ -63,7 +75,7 @@
         icon_color: 'white'
         pos_hint: {'center_x': .5}
         on_release:
-            root.response()
+            root.validate_api()
 
 # Chats
 
